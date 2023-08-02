@@ -22,18 +22,8 @@ sp = spotipy.Spotify(
     )
 )
 
-sp = spotipy.Spotify(
-    auth_manager=SpotifyOAuth(
-        scope=scope,
-        client_id=client_id,
-        client_secret=client_secret,
-        redirect_uri=redirect_uri,
-    )
-)
-
-
-# Prompt the user for the Spotify track link
-spotify_track_link = input("Enter the Spotify track link: ")
+# ask user to enter the spotify link of the song.
+spotify_track_link = input("Enter the Spotify song link: ")
 
 # Extract the track ID from the link
 track_id = spotify_track_link.split("/")[-1].split("?")[0]
@@ -43,13 +33,17 @@ track_id = spotify_track_link.split("/")[-1].split("?")[0]
 track_info = sp.track(track_id)
 track_name = track_info["name"]
 artist_name = track_info["artists"][0]["name"]
-track_url = track_info["preview_url"]
+# track_url = track_info["preview_url"]
 
-# Download the track
-if track_url:
-    file_name = f"{artist_name} - {track_name}.mp3"
-    file_path = f"/Users/chiduanush/Desktop/{file_name}"  # Replace with your desired folder path
-    urllib.request.urlretrieve(track_url, file_path)
-    print(f"Downloaded: {file_name}")
-else:
-    print(f"No preview available for: {track_name}")
+song_name = f"{artist_name} - {track_name}"
+print(song_name)
+
+# -----------------------
+
+# https://www.youtube.com/results?search_query=
+
+query = song_name.replace(" ", "+")
+print(query)
+
+yt_search_url = f"https://www.youtube.com/results?search_query={query}"
+print(yt_search_url)
