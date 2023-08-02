@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 import requests
 import re
 
+from pytube import YouTube
+
 
 load_dotenv()
 
@@ -56,7 +58,20 @@ response = requests.get(yt_search_url)
 result_urls = re.findall(r"watch\?v=(\S{11})", response.text)
 
 # getting only the first search result, and appending it to the basic youtube search url
-first_result_url = "https://www.youtube.com/watch?v=" + result_urls[0]
+yt_video_url = "https://www.youtube.com/watch?v=" + result_urls[0]
 
+print(yt_video_url)
 
-print(first_result_url)
+# ----------------------------
+
+# create a youtube object
+yt = YouTube(yt_video_url)
+print("youtube video title: ", yt.title)
+
+# get the audio from the url.
+audio = yt.streams.get_audio_only()
+
+# download the audio to your desired path
+audio.download(output_path="/Users/chiduanush/Desktop", filename=f"{yt.title}.mp3")
+
+print("downloaded video")
