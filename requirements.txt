@@ -1,4 +1,4 @@
 pytube==15.0.0
 Requests==2.31.0
 spotipy==2.23.0
-streamlit==1.23.3
+streamlit==1.23.1
