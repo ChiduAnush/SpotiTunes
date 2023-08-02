@@ -15,6 +15,7 @@ redirect_uri = "http://localhost:8000/callback"
 
 client_id = os.getenv("SPOTIPY_CLIENT_ID")
 client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
+download_path = os.getenv("DOWNLOAD_PATH")
 
 # Set up authentication
 scope = "user-library-read"
@@ -54,7 +55,7 @@ def search_youtube(song_name):
 def download_audio(yt_video_url):
     yt = YouTube(yt_video_url)
     audio = yt.streams.get_audio_only()
-    audio.download(output_path="/Users/chiduanush/Desktop", filename=f"{yt.title}.mp3")
+    audio.download(output_path=download_path, filename=f"{yt.title}.mp3")
     print("Downloaded audio")
 
 

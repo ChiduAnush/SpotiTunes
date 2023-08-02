@@ -1,3 +1,7 @@
+# THIS IS TRIAL CODE, JUST FOR UNDERSTANDING.
+# The final working code is downloader.py
+
+
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
