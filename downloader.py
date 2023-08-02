@@ -35,9 +35,6 @@ sp = spotipy.Spotify(
 # Prompt the user for the Spotify track link
 spotify_track_link = input("Enter the Spotify track link: ")
 
-# # Extract the track ID from the link
-# track_id = spotify_track_link.split("/")[-1]
-
 # Extract the track ID from the link
 track_id = spotify_track_link.split("/")[-1].split("?")[0]
 
