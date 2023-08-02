@@ -27,51 +27,74 @@ sp = spotipy.Spotify(
     )
 )
 
-# ask user to enter the spotify link of the song.
-spotify_track_link = input("Enter the Spotify song link: ")
 
-# Extract the track ID from the link
-track_id = spotify_track_link.split("/")[-1].split("?")[0]
+def get_track_info(spotify_track_link):
+    # Extract the track ID from the link
+    track_id = spotify_track_link.split("/")[-1].split("?")[0]
+
+    # Get the track information
+    track_info = sp.track(track_id)
+    track_name = track_info["name"]
+    artist_name = track_info["artists"][0]["name"]
+    song_name = f"{artist_name} - {track_name}"
+
+    return song_name
 
 
-# Get the track information
-track_info = sp.track(track_id)
-track_name = track_info["name"]
-artist_name = track_info["artists"][0]["name"]
-# track_url = track_info["preview_url"]
+def search_youtube(song_name):
+    query = song_name.replace(" ", "+")
+    yt_search_url = f"https://www.youtube.com/results?search_query={query}"
+    response = requests.get(yt_search_url)
+    result_urls = re.findall(r"watch\?v=(\S{11})", response.text)
+    yt_video_url = "https://www.youtube.com/watch?v=" + result_urls[0]
 
-song_name = f"{artist_name} - {track_name}"
-print(song_name)
+    return yt_video_url
 
-# -----------------------
 
-query = song_name.replace(" ", "+")
-# print(query)
+def download_audio(yt_video_url):
+    yt = YouTube(yt_video_url)
+    audio = yt.streams.get_audio_only()
+    audio.download(output_path="/Users/chiduanush/Desktop", filename=f"{yt.title}.mp3")
+    print("Downloaded audio")
 
-# make the url for the youtube search with the query
-yt_search_url = f"https://www.youtube.com/results?search_query={query}"
 
-# get html response from the yt_search_url
-response = requests.get(yt_search_url)
+def download_song(spotify_track_link):
+    # Get track information
+    song_name = get_track_info(spotify_track_link)
+    print(song_name)
 
-# get all results with the matching pattern, from the html response
-result_urls = re.findall(r"watch\?v=(\S{11})", response.text)
+    # Search YouTube for the song
+    yt_video_url = search_youtube(song_name)
+    print(yt_video_url)
 
-# getting only the first search result, and appending it to the basic youtube search url
-yt_video_url = "https://www.youtube.com/watch?v=" + result_urls[0]
+    # Download the audio from YouTube
+    download_audio(yt_video_url)
 
-print(yt_video_url)
 
-# ----------------------------
+def download_playlist(spotify_playlist_link):
+    # Extract the playlist ID from the link
+    playlist_id = spotify_playlist_link.split("/")[-1].split("?")[0]
 
-# create a youtube object
-yt = YouTube(yt_video_url)
-print("youtube video title: ", yt.title)
+    # Get the tracks from the playlist
+    playlist_tracks = sp.playlist_tracks(playlist_id)
 
-# get the audio from the url.
-audio = yt.streams.get_audio_only()
+    for track in playlist_tracks["items"]:
+        # Get the Spotify track link
+        spotify_track_link = track["track"]["external_urls"]["spotify"]
 
-# download the audio to your desired path
-audio.download(output_path="/Users/chiduanush/Desktop", filename=f"{yt.title}.mp3")
+        # Download the song
+        download_song(spotify_track_link)
 
-print("downloaded video")
+
+# ask user to enter the Spotify link
+spotify_link = input("Enter the Spotify link: ")
+
+# Check if it's a single song or a playlist
+if "track" in spotify_link:
+    # Download the single song
+    download_song(spotify_link)
+elif "playlist" in spotify_link:
+    # Download the playlist
+    download_playlist(spotify_link)
+else:
+    print("Invalid Spotify link.")
