@@ -102,6 +102,7 @@ def download_playlist(spotify_playlist_link):
 
 def main():
     st.title("Spotify Song Downloader")
+    st.set_option("browser.gatherUsageStats", False)
 
     # Ask user for the spotify credentials
     client_id, client_secret = get_spotify_credentials()
