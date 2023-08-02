@@ -2,11 +2,14 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import urllib.request
 import os
+from dotenv import load_dotenv
 
-# ask user to enter the client id and client secret
-client_id = input("Enter your client ID: ")
-client_secret = input("Enter your client secret: ")
+load_dotenv()
+
 redirect_uri = "http://localhost:8000/callback"
+
+client_id = os.getenv("SPOTIPY_CLIENT_ID")
+client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
 
 # Set up authentication
 scope = "user-library-read"
