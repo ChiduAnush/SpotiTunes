@@ -100,33 +100,33 @@ def download_playlist(spotify_playlist_link):
     st.write("downloaded all songs, you can check your folder now ;)")
 
 
-def main():
-    st.title("Spotify Song Downloader")
+# def main():
+st.title("Spotify Song Downloader")
 
-    # Ask user for the spotify credentials
-    client_id, client_secret = get_spotify_credentials()
+# Ask user for the spotify credentials
+client_id, client_secret = get_spotify_credentials()
 
-    global download_path
-    download_path = get_download_path()
+global download_path
+download_path = get_download_path()
 
-    if download_path:
-        if client_id and client_secret:
-            # Setup Spotify authentication
-            global sp
-            sp = setup_spotify_auth(client_id, client_secret)
+if download_path:
+    if client_id and client_secret:
+        # Setup Spotify authentication
+        global sp
+        sp = setup_spotify_auth(client_id, client_secret)
 
-            spotify_link = st.text_input("Enter the Spotify link:")
+        spotify_link = st.text_input("Enter the Spotify link:")
 
-            # Check if it's a single song or a playlist
-            if "track" in spotify_link:
-                # Download the single song
-                if st.button("Download Single Song"):
-                    download_song(spotify_link)
-            elif "playlist" in spotify_link:
-                # Download the playlist
-                if st.button("Download Playlist"):
-                    download_playlist(spotify_link)
+        # Check if it's a single song or a playlist
+        if "track" in spotify_link:
+            # Download the single song
+            if st.button("Download Single Song"):
+                download_song(spotify_link)
+        elif "playlist" in spotify_link:
+            # Download the playlist
+            if st.button("Download Playlist"):
+                download_playlist(spotify_link)
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
