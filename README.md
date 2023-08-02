@@ -17,6 +17,7 @@ A simple python script to download individual songs, or whole playlists, from sp
 1. spotify developer account (https://developer.spotify.com/dashboard)
 
 - create an app
+- put the redirect uri as: http://localhost:8000/callback
 - keep the client ID, and client Secret handy.
 
 2. Clone this repository.
