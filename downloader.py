@@ -1,8 +1,11 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-import urllib.request
 import os
 from dotenv import load_dotenv
+
+import requests
+import re
+
 
 load_dotenv()
 
@@ -40,10 +43,20 @@ print(song_name)
 
 # -----------------------
 
-# https://www.youtube.com/results?search_query=
-
 query = song_name.replace(" ", "+")
-print(query)
+# print(query)
 
+# make the url for the youtube search with the query
 yt_search_url = f"https://www.youtube.com/results?search_query={query}"
-print(yt_search_url)
+
+# get html response from the yt_search_url
+response = requests.get(yt_search_url)
+
+# get all results with the matching pattern, from the html response
+result_urls = re.findall(r"watch\?v=(\S{11})", response.text)
+
+# getting only the first search result, and appending it to the basic youtube search url
+first_result_url = "https://www.youtube.com/watch?v=" + result_urls[0]
+
+
+print(first_result_url)
