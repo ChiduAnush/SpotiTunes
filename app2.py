@@ -52,34 +52,36 @@ def download_audio(yt_video_url):
 def download_song(spotify_track_link):
     # Get track information
     st.write("entered function")
-    song_name = get_track_info(spotify_track_link)
-    st.write(song_name)
+    with st.spinner("Downloading..."):
+        song_name = get_track_info(spotify_track_link)
+        st.write(song_name)
 
-    # Search YouTube for the song
-    yt_video_url = search_youtube(song_name)
-    st.write(f"youtube link: {yt_video_url}")
+        # Search YouTube for the song
+        yt_video_url = search_youtube(song_name)
+        st.write(f"youtube link: {yt_video_url}")
 
-    audio_bytes, yt_title = download_audio(yt_video_url)
+        audio_bytes, yt_title = download_audio(yt_video_url)
 
-    st.download_button(
-        label="Download MP3", data=audio_bytes, file_name=f"{yt_title}.mp3"
-    )
+        st.download_button(
+            label="Download MP3", data=audio_bytes, file_name=f"{yt_title}.mp3"
+        )
 
 
 def download_playlist(spotify_playlist_link):
     # Extract the playlist ID from the link
-    playlist_id = spotify_playlist_link.split("/")[-1].split("?")[0]
+    with st.spinner("Downloading playlist..."):
+        playlist_id = spotify_playlist_link.split("/")[-1].split("?")[0]
 
-    # Get the tracks from the playlist
-    playlist_tracks = sp.playlist_tracks(playlist_id)
+        # Get the tracks from the playlist
+        playlist_tracks = sp.playlist_tracks(playlist_id)
 
-    for track in playlist_tracks["items"]:
-        # Get the Spotify track link
-        spotify_track_link = track["track"]["external_urls"]["spotify"]
+        for track in playlist_tracks["items"]:
+            # Get the Spotify track link
+            spotify_track_link = track["track"]["external_urls"]["spotify"]
 
-        # Download the song
-        download_song(spotify_track_link)
-    st.write("downloaded all songs, you can check your folder now ;)")
+            # Download the song
+            download_song(spotify_track_link)
+        st.write("downloaded all songs, you can check your folder now ;)")
 
 
 # def main():
@@ -100,34 +102,17 @@ sp = spotipy.Spotify(
 )
 
 
-# spotify_link = st.text_input("Enter the Spotify link:")
-
-# # Check if it's a single song or a playlist
-# if "track" in spotify_link:
-#     # Download the single song
-#     if st.button("Download Single Song"):
-#         st.write("button clicked")
-#         download_song(spotify_link)
-# elif "playlist" in spotify_link:
-#     # Download the playlist
-#     if st.button("Download Playlist"):
-#         download_playlist(spotify_link)
-
-
-# Create a form for the button
-form = st.form(key="my_form")
-
-spotify_link = form.text_input("Enter the Spotify link:")
+spotify_link = st.text_input("Enter the Spotify link:")
 
 # Check if it's a single song or a playlist
 if "track" in spotify_link:
     # Download the single song
-    if form.form_submit_button("Download Single Song"):
+    if st.button("Download Single Song"):
         st.write("button clicked")
         download_song(spotify_link)
 elif "playlist" in spotify_link:
     # Download the playlist
-    if form.form_submit_button("Download Playlist"):
+    if st.button("Download Playlist"):
         download_playlist(spotify_link)
 
 
