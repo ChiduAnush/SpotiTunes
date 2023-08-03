@@ -11,7 +11,7 @@ from io import BytesIO
 
 # load_dotenv()
 
-redirect_uri = "http://localhost:8000/callback"
+redirect_uri = "http://localhost:8080/callback"
 
 
 # Function to get Spotify credentials from user input
