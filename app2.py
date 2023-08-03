@@ -21,8 +21,16 @@ def get_track_info(spotify_track_link):
     st.write("got the track id")
 
     # Get the track information
-    track_info = sp.track(track_id)
-    st.write("got track info")
+    # track_info = sp.track(track_id)
+    # st.write("got track info")
+
+    try:
+        track_info = sp.track(track_id)
+        st.write("for track info")
+    except spotipy.exceptions.SpotifyException as e:
+        st.error(f"Error fetching track information: {e}")
+        return
+
     track_name = track_info["name"]
     artist_name = track_info["artists"][0]["name"]
     st.write("got track name and artist name")
