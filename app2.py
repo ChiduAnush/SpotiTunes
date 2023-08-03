@@ -97,6 +97,8 @@ st.title("Spotify Song Downloader")
 # Initialize the Spotify API client with your credentials
 client_id = st.secrets["CLIENT_ID"]
 client_secret = st.secrets["CLIENT_SECRET"]
+# client_id = "6352126060d64f2cad18ea7acfdec6a2"
+# client_secret = "49a7d02c37bb4211bf665376d3dc352a"
 redirect_uri = "https://spotitunes2.streamlit.app"
 sp = spotipy.Spotify(
     auth_manager=SpotifyOAuth(
