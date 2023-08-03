@@ -16,13 +16,16 @@ from io import BytesIO
 
 def get_track_info(spotify_track_link):
     # Extract the track ID from the link
-    st.write("entered function2")
+    st.write("entered spotify function")
     track_id = spotify_track_link.split("/")[-1].split("?")[0]
+    st.write("got the track id")
 
     # Get the track information
     track_info = sp.track(track_id)
+    st.write("got track info")
     track_name = track_info["name"]
     artist_name = track_info["artists"][0]["name"]
+    st.write("got track name and artist name")
     song_name = f"{artist_name} - {track_name}"
 
     st.write("got song name from spotify")
