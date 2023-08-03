@@ -51,6 +51,7 @@ def download_audio(yt_video_url):
 
 def download_song(spotify_track_link):
     # Get track information
+    st.write("entered function")
     song_name = get_track_info(spotify_track_link)
     st.write(song_name)
 
@@ -105,6 +106,7 @@ spotify_link = st.text_input("Enter the Spotify link:")
 if "track" in spotify_link:
     # Download the single song
     if st.button("Download Single Song"):
+        st.write("button clicked")
         download_song(spotify_link)
 elif "playlist" in spotify_link:
     # Download the playlist
