@@ -69,19 +69,19 @@ def download_song(spotify_track_link):
 
 def download_playlist(spotify_playlist_link):
     # Extract the playlist ID from the link
-    with st.spinner("Downloading playlist..."):
-        playlist_id = spotify_playlist_link.split("/")[-1].split("?")[0]
+    # with st.spinner("Downloading playlist..."):
+    playlist_id = spotify_playlist_link.split("/")[-1].split("?")[0]
 
-        # Get the tracks from the playlist
-        playlist_tracks = sp.playlist_tracks(playlist_id)
+    # Get the tracks from the playlist
+    playlist_tracks = sp.playlist_tracks(playlist_id)
 
-        for track in playlist_tracks["items"]:
-            # Get the Spotify track link
-            spotify_track_link = track["track"]["external_urls"]["spotify"]
+    for track in playlist_tracks["items"]:
+        # Get the Spotify track link
+        spotify_track_link = track["track"]["external_urls"]["spotify"]
 
-            # Download the song
-            download_song(spotify_track_link)
-        st.write("downloaded all songs, you can check your folder now ;)")
+        # Download the song
+        download_song(spotify_track_link)
+    st.write("downloaded all songs, you can check your folder now ;)")
 
 
 # def main():
