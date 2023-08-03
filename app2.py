@@ -16,6 +16,7 @@ from io import BytesIO
 
 def get_track_info(spotify_track_link):
     # Extract the track ID from the link
+    st.write("entered function2")
     track_id = spotify_track_link.split("/")[-1].split("?")[0]
 
     # Get the track information
@@ -24,10 +25,12 @@ def get_track_info(spotify_track_link):
     artist_name = track_info["artists"][0]["name"]
     song_name = f"{artist_name} - {track_name}"
 
+    st.write("got song name from spotify")
     return song_name
 
 
 def search_youtube(song_name):
+    st.write("enter searhc youtube function")
     query = song_name.replace(" ", "+")
     yt_search_url = f"https://www.youtube.com/results?search_query={query}"
     response = requests.get(yt_search_url)
