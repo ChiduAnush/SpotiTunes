@@ -100,17 +100,34 @@ sp = spotipy.Spotify(
 )
 
 
-spotify_link = st.text_input("Enter the Spotify link:")
+# spotify_link = st.text_input("Enter the Spotify link:")
+
+# # Check if it's a single song or a playlist
+# if "track" in spotify_link:
+#     # Download the single song
+#     if st.button("Download Single Song"):
+#         st.write("button clicked")
+#         download_song(spotify_link)
+# elif "playlist" in spotify_link:
+#     # Download the playlist
+#     if st.button("Download Playlist"):
+#         download_playlist(spotify_link)
+
+
+# Create a form for the button
+form = st.form(key="my_form")
+
+spotify_link = form.text_input("Enter the Spotify link:")
 
 # Check if it's a single song or a playlist
 if "track" in spotify_link:
     # Download the single song
-    if st.button("Download Single Song"):
+    if form.form_submit_button("Download Single Song"):
         st.write("button clicked")
         download_song(spotify_link)
 elif "playlist" in spotify_link:
     # Download the playlist
-    if st.button("Download Playlist"):
+    if form.form_submit_button("Download Playlist"):
         download_playlist(spotify_link)
 
 
