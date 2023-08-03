@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spotify Downloader</title>
+</head>
+<body>
+    <h1>Spotify Downloader</h1>
+    <form method="POST">
+        <label for="spotify_link">Enter Spotify Link:</label><br>
+        <input type="text" id="spotify_link" name="spotify_link" required><br>
+        <input type="submit" value="Download">
+    </form>
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+</body>
+</html>
