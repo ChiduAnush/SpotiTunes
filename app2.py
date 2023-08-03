@@ -66,19 +66,19 @@ def download_audio(yt_video_url):
 def download_song(spotify_track_link):
     # Get track information
     st.write("entered function")
-    # with st.spinner("Downloading..."):
-    song_name = get_track_info(spotify_track_link)
-    st.write(song_name)
+    with st.spinner("getting track info..."):
+        song_name = get_track_info(spotify_track_link)
+        st.write(song_name)
 
-    # Search YouTube for the song
-    yt_video_url = search_youtube(song_name)
-    st.write(f"youtube link: {yt_video_url}")
+        # Search YouTube for the song
+        yt_video_url = search_youtube(song_name)
+        st.write(f"youtube link: {yt_video_url}")
 
-    audio_bytes, yt_title = download_audio(yt_video_url)
+        audio_bytes, yt_title = download_audio(yt_video_url)
 
-    st.download_button(
-        label="Download MP3", data=audio_bytes, file_name=f"{yt_title}.mp3"
-    )
+        st.download_button(
+            label="Download MP3", data=audio_bytes, file_name=f"{yt_title}.mp3"
+        )
 
 
 def download_playlist(spotify_playlist_link):
