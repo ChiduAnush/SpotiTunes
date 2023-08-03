@@ -11,7 +11,7 @@ from io import BytesIO
 
 # load_dotenv()
 
-redirect_uri = spotipy.oauth2.SpotifyOAuth.REDIRECT_URI
+# redirect_uri = spotipy.oauth2.SpotifyOAuth.REDIRECT_URI
 
 
 def get_track_info(spotify_track_link):
