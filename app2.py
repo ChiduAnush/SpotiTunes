@@ -93,7 +93,6 @@ sp = spotipy.Spotify(
         scope="user-library-read",
         client_id=client_id,
         client_secret=client_secret,
-        redirect_uri=None,
     )
 )
 
