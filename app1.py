@@ -5,6 +5,7 @@ import requests
 import re
 from pytube import YouTube
 import streamlit as st
+from io import BytesIO
 
 # from dotenv import load_dotenv
 
@@ -34,13 +35,6 @@ def setup_spotify_auth(client_id, client_secret):
     return sp
 
 
-def get_download_path():
-    path = st.text_input(
-        "specify your folder path where you want to download your song(s) to:"
-    )
-    return path
-
-
 def get_track_info(spotify_track_link):
     # Extract the track ID from the link
     track_id = spotify_track_link.split("/")[-1].split("?")[0]
@@ -64,24 +58,16 @@ def search_youtube(song_name):
     return yt_video_url
 
 
-def download_audio(yt_video_url, download_path):
+def download_audio(yt_video_url):
     yt = YouTube(yt_video_url)
-    audio = yt.streams.get_audio_only()
+    audio_stream = yt.streams.get_audio_only()
 
-    # # audio = yt.streams.filter(only_audio=True).get_highest_resolution()
-    # audio = yt.streams.get_audio_only()
-    # temp_file = audio.download()
-    # mp3_file = temp_file.split(".")[0] + ".mp3"
-    # audio.download(output_path=mp3_file)
-    # if mp3_file:
-    #     st.success("audio downloaded successfully!")
-    #     # st.markdown(f"Download Link: [Download Audio]({mp3_file})")
-    #     st.download_button("download the mp3 file", mp3_file)
-    # else:
-    #     st.warning("something went brrr")
+    # Download the audio as bytes
+    with BytesIO() as buffer:
+        audio_stream.stream_to_buffer(buffer)
+        audio_bytes = buffer.getvalue()
 
-    audio.download(output_path=download_path, filename=f"{yt.title}.mp3")
-    st.write("Downloaded audio")
+    return audio_bytes, yt.title
 
 
 def download_song(spotify_track_link):
@@ -93,8 +79,11 @@ def download_song(spotify_track_link):
     yt_video_url = search_youtube(song_name)
     st.write(f"youtube link: {yt_video_url}")
 
-    # Download the audio from YouTube
-    download_audio(yt_video_url, download_path)
+    audio_bytes, yt_title = download_audio(yt_video_url)
+
+    st.download_button(
+        label="Download MP3", data=audio_bytes, file_name=f"{yt_title}.mp3"
+    )
 
 
 def download_playlist(spotify_playlist_link):
@@ -119,26 +108,23 @@ st.title("Spotify Song Downloader")
 # Ask user for the spotify credentials
 client_id, client_secret = get_spotify_credentials()
 
-global download_path
-download_path = get_download_path()
 
-if download_path:
-    if client_id and client_secret:
-        # Setup Spotify authentication
-        global sp
-        sp = setup_spotify_auth(client_id, client_secret)
+if client_id and client_secret:
+    # Setup Spotify authentication
+    global sp
+    sp = setup_spotify_auth(client_id, client_secret)
 
-        spotify_link = st.text_input("Enter the Spotify link:")
+    spotify_link = st.text_input("Enter the Spotify link:")
 
-        # Check if it's a single song or a playlist
-        if "track" in spotify_link:
-            # Download the single song
-            if st.button("Download Single Song"):
-                download_song(spotify_link)
-        elif "playlist" in spotify_link:
-            # Download the playlist
-            if st.button("Download Playlist"):
-                download_playlist(spotify_link)
+    # Check if it's a single song or a playlist
+    if "track" in spotify_link:
+        # Download the single song
+        if st.button("Download Single Song"):
+            download_song(spotify_link)
+    elif "playlist" in spotify_link:
+        # Download the playlist
+        if st.button("Download Playlist"):
+            download_playlist(spotify_link)
 
 
 # if __name__ == "__main__":
