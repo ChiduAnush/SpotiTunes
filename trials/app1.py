@@ -9,7 +9,6 @@ from pytube import YouTube
 from flask import Flask, render_template, request, send_file, Response
 
 import zipfile
-import tempfile
 
 load_dotenv()
 
@@ -123,14 +122,13 @@ def download_playlist(spotify_playlist_link):
     playlist_tracks = sp.playlist_tracks(playlist_id)
 
     audio_files = []
+
     for track in playlist_tracks["items"]:
         spotify_track_link = track["track"]["external_urls"]["spotify"]
         audio_data, audio_filename = download_song(spotify_track_link)
         audio_files.append((audio_data, audio_filename))
 
-    # Create a temporary directory to save the ZIP archive
-    temp_dir = tempfile.mkdtemp()
-    zip_filename = os.path.join(temp_dir, "playlist.zip")
+    zip_filename = "playlist.zip"
 
     with zipfile.ZipFile(zip_filename, "w") as playlist_zip:
         for audio_data, audio_filename in audio_files:

@@ -6,10 +6,7 @@ from dotenv import load_dotenv
 import requests
 import re
 from pytube import YouTube
-from flask import Flask, render_template, request, send_file, Response
-
-import zipfile
-import tempfile
+from flask import Flask, render_template, request
 
 load_dotenv()
 
@@ -43,20 +40,12 @@ def home():
             app_messages.clear()
 
             # Download the single song
-            audio_data, audio_filename = download_song(spotify_link)
-            return Response(
-                audio_data,
-                content_type="audio/mpeg",
-                headers={
-                    "Content-Disposition": f'attachment; filename="{audio_filename}"'
-                },
-            )
+            download_song(spotify_link)
         elif "playlist" in spotify_link:
             app_messages.clear()
 
             # Download the playlist
-            zip_filename = download_playlist(spotify_link)
-            return send_file(zip_filename, as_attachment=True)
+            download_playlist(spotify_link)
         else:
             return render_template("index.html", error="Invalid Spotify link.")
     return render_template("index.html", error=None, messages=app_messages)
@@ -88,15 +77,8 @@ def search_youtube(song_name):
 def download_audio(yt_video_url):
     yt = YouTube(yt_video_url)
     audio = yt.streams.filter(only_audio=True).first()
-    audio_file_path = os.path.join(download_path, f"{yt.title}.mp3")
     audio.download(output_path=download_path, filename=f"{yt.title}.mp3")
-
-    with open(audio_file_path, "rb") as audio_file:
-        audio_data = audio_file.read()
-
-    os.remove(audio_file_path)  # Remove the downloaded file from server
-
-    return audio_data, f"{yt.title}.mp3"
+    print("Downloaded audio")
 
 
 def download_song(spotify_track_link):
@@ -110,9 +92,9 @@ def download_song(spotify_track_link):
     app_messages.append(f"youtube link: {yt_video_url}")
     print(yt_video_url)
 
-    audio_data, audio_filename = download_audio(yt_video_url)
+    # Download the audio from YouTube
+    download_audio(yt_video_url)
     app_messages.append("audio downloaded")
-    return audio_data, audio_filename
 
 
 def download_playlist(spotify_playlist_link):
@@ -122,21 +104,12 @@ def download_playlist(spotify_playlist_link):
     # Get the tracks from the playlist
     playlist_tracks = sp.playlist_tracks(playlist_id)
 
-    audio_files = []
     for track in playlist_tracks["items"]:
+        # Get the Spotify track link
         spotify_track_link = track["track"]["external_urls"]["spotify"]
-        audio_data, audio_filename = download_song(spotify_track_link)
-        audio_files.append((audio_data, audio_filename))
 
-    # Create a temporary directory to save the ZIP archive
-    temp_dir = tempfile.mkdtemp()
-    zip_filename = os.path.join(temp_dir, "playlist.zip")
-
-    with zipfile.ZipFile(zip_filename, "w") as playlist_zip:
-        for audio_data, audio_filename in audio_files:
-            playlist_zip.writestr(audio_filename, audio_data)
-
-    return zip_filename
+        # Download the song
+        download_song(spotify_track_link)
 
 
 if __name__ == "__main__":

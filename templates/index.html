@@ -24,5 +24,9 @@
     </ul>
     {% endif %}
 
+    {% if audio_filename %}
+        <a href="{{ url_for('home') }}" download>Download {{ audio_filename }}</a>
+    {% endif %}
+
 </body>
 </html>
