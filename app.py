@@ -29,20 +29,26 @@ sp = spotipy.Spotify(
 
 app = Flask(__name__)
 
+app_messages = []
+
 
 @app.route("/", methods=["GET", "POST"])
 def home():
     if request.method == "POST":
         spotify_link = request.form["spotify_link"]
         if "track" in spotify_link:
+            app_messages.clear()
+
             # Download the single song
             download_song(spotify_link)
         elif "playlist" in spotify_link:
+            app_messages.clear()
+
             # Download the playlist
             download_playlist(spotify_link)
         else:
             return render_template("index.html", error="Invalid Spotify link.")
-    return render_template("index.html", error=None)
+    return render_template("index.html", error=None, messages=app_messages)
 
 
 def get_track_info(spotify_track_link):
@@ -78,14 +84,17 @@ def download_audio(yt_video_url):
 def download_song(spotify_track_link):
     # Get track information
     song_name = get_track_info(spotify_track_link)
+    app_messages.append(f"song name: {song_name}")
     print(song_name)
 
     # Search YouTube for the song
     yt_video_url = search_youtube(song_name)
+    app_messages.append(f"youtube link: {yt_video_url}")
     print(yt_video_url)
 
     # Download the audio from YouTube
     download_audio(yt_video_url)
+    app_messages.append("audio downloaded")
 
 
 def download_playlist(spotify_playlist_link):

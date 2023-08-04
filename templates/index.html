@@ -8,10 +8,21 @@
     <form method="POST">
         <label for="spotify_link">Enter Spotify Link:</label><br>
         <input type="text" id="spotify_link" name="spotify_link" required><br>
-        <input type="submit" value="Download">
+        <!-- <input type="submit" value="Download"> -->
+        <button type="submit">Download</button>
     </form>
     {% if error %}
         <p>{{ error }}</p>
     {% endif %}
+
+    {% if messages %}
+    <h2>Process Messages:</h2>
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
 </body>
 </html>
